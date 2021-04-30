@@ -6,7 +6,7 @@ using LinearAlgebra
             Function to represent the initial normalized state vector in  Cn 
     
     1) 
-    Function name : intial_state 
+    Function name : initial_state 
     Requirements  : 
                     1) Compute the number of qubits required to represent the domain
                     2) Calculate the intial functional approximation in the domain 
@@ -22,15 +22,26 @@ using LinearAlgebra
     Output        : x                          // Domain of discretization
 
     3) 
+    Function name : toeplitz 
+    Requirements  : 
+                    1) Construct toeplitz matrix for an arbitrary dimension n.  
+                    2) Main diagonal := 1 + 2 tau/h^2 
+                    3) Other diagonals := -tau/h^2 
+    Params 1      : n , tau , h 
+    Output        : U belongs to a Toeplitz matrix in Cn. 
+
+    4) 
+    Function name : update_matrix
+    Requirements  : 
+                    1) Compute B := A^m; 
+    Params 1      : m (The number of time steps that we take
+                        T_final = m*tau)
+    Output        : A^m matrix, that recursively returns the product; 
 =# 
 
 function discretize(x_intial,x_final,N)
     x = LinRange(x_intial,x_final,N);
     return x; 
-end
-
-function f(x)
-    return x;
 end
 
 function initial_state(x,f,tau)
@@ -49,5 +60,16 @@ function initial_state(x,f,tau)
     # Norm of T_0 
     T_0 = T_0 / norm(T_0); 
     return n_qubits,T_0; 
+end
+
+function toeplitz(n,tau,h) 
+    k1 = (1 + 2*tau/h^2)*ones(n);
+    k2 = (-tau/h^2)*ones(n-1); 
+    return Tridiagonal(k2,k1,k2); 
+end
+
+function update_matrix(h,tau,m,n)
+    A = toeplitz(n,tau,h);
+    return A^m;
 end
 

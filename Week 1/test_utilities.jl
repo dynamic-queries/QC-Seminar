@@ -26,7 +26,7 @@ function test_discretize()
     @assert(x[N]==1);
     # Test increment 
     @assert(x[2]-x[1] == 0.1); 
-    println("All tests passed\n");
+    println("Discretization tests passed\n");
 end
 
 function test_initial_state() 
@@ -51,5 +51,60 @@ function test_initial_state()
     @assert(isapprox(T0[1],0.267261,atol=1e-1));
     @assert(isapprox(T0[2],0.534522,atol=1e-1));
     @assert(isapprox(T0[3],0.801784,atol=1e-1));
-    println("All tests passed\n"); 
+    println("Initial vector tests passed\n"); 
+end
+
+function test_toeplitz()
+    #= **********Test case***************
+    n = 3; 
+    tau = 1;
+    h = 1;
+    **Output** 
+    A = {{3,-1,0},{-1,3,-1},{-1,3,0}}
+    ************************************ =#
+     n = 3; 
+     tau = 1;
+     h = 1 ;
+     A = toeplitz(n,tau,h);
+     
+     #Assertions 
+     @assert(A[1,1] == 3)
+     @assert(A[1,2] == -1)
+     @assert(A[1,3] == 0)
+     @assert(A[2,1] == -1)
+     @assert(A[2,2] == 3)
+     @assert(A[2,3] == -1)
+     @assert(A[3,1] == 0)
+     @assert(A[3,2] == -1)
+     @assert(A[3,3] == 3)
+    println("Toeplitz tests passed\n");
+end 
+
+function test_update_matrix() 
+    #= **********Test case***************
+    n = 3; 
+    tau = 1;
+    h = 1;
+    m = 2;
+    **Output** 
+    A = {{3,-1,0},{-1,3,-1},{-1,3,0}}
+    B = A^ 2 = You'll see. 
+    ************************************ =#
+    n = 3 ;
+    tau = 1;
+    h = 1;
+    m = 2;
+    B = update_matrix(h,tau,m,n);
+
+    #Assertions 
+    @assert(B[1,1] == 10)
+    @assert(B[1,2] == -6)
+    @assert(B[1,3] == 1)
+    @assert(B[2,1] == -6)
+    @assert(B[2,2] == 11)
+    @assert(B[2,3] == -6)
+    @assert(B[3,1] == 1)
+    @assert(B[3,2] == -6)
+    @assert(B[3,3] == 10)
+   println("Update matrix tests passed\n");
 end
