@@ -44,21 +44,16 @@ function cswap(y)
     1) If n is even we swap the extreme gates but the one in the middle
     2) If n is odd we swap all the extreme gates
     =#
-    # print("Main function");
-    # print("\n");
-    # print(y);
-    # print("\n");
     n = length(y);
     for i=1:Int16(ceil(n/2))
             y[i],y[n-i+1] = swap(y[i],y[n-i+1]);
     end
-    # print(y);
  end
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function HxN(n,i)
     #=
     #---------------------------------------------------------------------------
-    How to use this : n is the number of qubits. i is the location of the operator.
+    How to use this : n is the number of qubits. i is the location of H operator.
     #---------------------------------------------------------------------------
     Scope for the future : Expand functionality to all Operators, by including an argument.
     =#
@@ -84,6 +79,50 @@ function HxN(n,i)
     end
     #---------------------------------------------------------------------------
     return Hxn
+end
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+function Rx(n,k,control,target)
+    # Since we are dealing with IQFT, the matrix is hardcoded. However this could be done
+    # for any matrix.
+    #=
+        kRot gate has a control gate and a target gate.
+        As we know a controlled operation is done as follows.
+        (P0 x I) + (P1 x S)
+    =#
+    @assert(control!=target);
+
+    S = [1 0;0 exp(2*pi/2^(k))];
+    Id = I();
+    P0 = [1 0;0 0];
+    P1 = [0 0;0 1];
+
+    O1 = Id;
+    O2 = Id;
+    for i=1:n
+        if (i==1)
+            if (target == 1)
+                O1 = Id;
+                O2 = S;
+            else
+                O1 = P0;
+                O2 = P1;
+            end
+            continue;
+        end
+        if (i==target)
+            O1 = kron(O1,Id);
+            O2 = kron(O2,S);
+        elseif (i==control)
+            O1 = kron(O1,P0);
+            O2 = kron(O2,P1);
+        else
+            O1 = kron(O1,Id);
+            O2 = kron(O2,Id);
+        end
+    end
+    O = O1 + O2;
+    return O;
 end
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function IQFT(y)
