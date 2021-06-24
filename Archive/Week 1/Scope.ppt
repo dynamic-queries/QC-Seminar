@@ -1,0 +1,15 @@
+Scope of Task 1 
+
+
+5 qubits 
+34 point discretization 
+
+
+<<<<<<< HEAD
+1) Routine : To represent any arbitrary state T0 in Cn  : Done 
+2) Routine : To represent the update matrix B = A^m in C_nxn : Done 
+=======
+1) Routine : To represent any arbitrary state T0 in Cn : Done pending approval. 
+2) Routine : To represent the update matrix B = A^m in C_nxn
+>>>>>>> 9c29c19ae85a0b4f03f5fa59a2f150978dc8b21d
+3) Routine : To complete a implementation on phase estimation from the code before. 
